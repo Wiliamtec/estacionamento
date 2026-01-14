@@ -37,7 +37,7 @@ public class Usuario implements Serializable {
     @Column(name = "criado_por")
     private String criadoPor;
 
-    @Column(name = "cmodificado_por")
+    @Column(name = "modificado_por")
     private String modificadoPor;
 
     public enum Role{

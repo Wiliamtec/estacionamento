@@ -2,9 +2,9 @@ package com.estacionamento_api.service;
 
 import com.estacionamento_api.entity.Usuario;
 import com.estacionamento_api.repository.UsuarioRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor //efetuado injeção de dependecia pelo construtor da classe
 @Service
@@ -17,5 +17,11 @@ public class UsuarioService {
     @Transactional
     public Usuario salvar(Usuario usuario) {
        return usuRepo.save(usuario);
+    }
+
+    @Transactional(readOnly = true)
+    public Usuario buscarPorId(Long id) {
+        return usuRepo.findById(id).orElseThrow(
+                ()-> new RuntimeException("Usuario Não Encontrado"));
     }
 }
