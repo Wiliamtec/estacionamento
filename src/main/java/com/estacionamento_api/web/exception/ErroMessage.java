@@ -1,5 +1,6 @@
 package com.estacionamento_api.web.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,6 +19,9 @@ public class ErroMessage {
     private int status;
     private String statusText;
     private String message;
+
+    //Anotação que diz que apenas objetos não nulos devem estar no objeto de resposta , se estiver nulo ele não enviara na resposta 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String ,String> errors;
 
     public ErroMessage() {

@@ -1,6 +1,7 @@
 package com.estacionamento_api.service;
 
 import com.estacionamento_api.entity.Usuario;
+import com.estacionamento_api.exception.UserNameUniqueViolationException;
 import com.estacionamento_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,12 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-       return usuRepo.save(usuario);
+        try {
+            return usuRepo.save(usuario);
+        }catch (org.springframework.dao.DataIntegrityViolationException ex){
+            throw new UserNameUniqueViolationException(String.format("Username {%s} ja cadastrado",usuario.getUsername()));
+
+        }
     }
 
     @Transactional(readOnly = true)
