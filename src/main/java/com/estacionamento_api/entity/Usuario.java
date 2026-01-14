@@ -25,7 +25,7 @@ public class Usuario implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role",nullable = false,length = 30)
-    private Role role;
+    private Role role = Role.ROLE_CLIENTE;
 
     //campos para auditoria
     @Column(name = "data_criacao")
@@ -37,7 +37,8 @@ public class Usuario implements Serializable {
     @Column(name = "criado_por")
     private String criadoPor;
 
-    @Column(name = "modificado_por")
+    @Column(name = "" +
+            "modificado_por")
     private String modificadoPor;
 
     public enum Role{
