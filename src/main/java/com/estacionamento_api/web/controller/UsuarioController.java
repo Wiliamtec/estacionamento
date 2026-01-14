@@ -37,7 +37,7 @@ public class UsuarioController {
 
     //PatchMapping -> usado para alterações parciais
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updatePassword(@PathVariable Long id,@RequestBody UsuarioSenhaDto dto){
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id,@Valid @RequestBody UsuarioSenhaDto dto){
         Usuario user = usuService.editarSenha(id, dto.getSenhaAtual(),dto.getNovaSenha(),dto.getConfirmaSenha());
         return  ResponseEntity.noContent().build();
 
