@@ -59,6 +59,16 @@ public class UsuarioController {
 
     }
 
+
+    @Operation(summary = "Atualizar senha ",description = "Atualizar senha",
+            responses = {
+                    @ApiResponse(responseCode = "204",description = "Senha Atualizada com sucesso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =Void.class ))),
+                    @ApiResponse(responseCode = "404",description = "Senha não confere",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
+                    @ApiResponse(responseCode = "400",description = "Recurso não Encontrado",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class )))
+            })
     //PatchMapping -> usado para alterações parciais
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePassword(@PathVariable Long id,@Valid @RequestBody UsuarioSenhaDto dto){
