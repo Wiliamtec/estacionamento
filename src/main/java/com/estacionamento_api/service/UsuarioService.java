@@ -2,6 +2,7 @@ package com.estacionamento_api.service;
 
 import com.estacionamento_api.entity.Usuario;
 import com.estacionamento_api.exception.EntityNotFoundException;
+import com.estacionamento_api.exception.PasswordInvalidException;
 import com.estacionamento_api.exception.UserNameUniqueViolationException;
 import com.estacionamento_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +38,14 @@ public class UsuarioService {
     @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         if(!novaSenha.equals(confirmaSenha)){
-            throw new RuntimeException("Nova senha não confere com a confirmação de senha");
+            throw new PasswordInvalidException("Nova senha não confere com a confirmação de senha");
 
         }
 
         Usuario user = buscarPorId(id); //utilizando metodo customizado criado para busca por id
 
         if(!user.getPassword().equals(senhaAtual)){
-            throw new RuntimeException("sua senha não confere");
+            throw new PasswordInvalidException("sua senha não confere");
         }
         user.setPassword(novaSenha);
         return user;

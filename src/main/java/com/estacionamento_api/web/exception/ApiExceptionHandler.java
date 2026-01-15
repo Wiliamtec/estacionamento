@@ -1,6 +1,7 @@
 package com.estacionamento_api.web.exception;
 
 import com.estacionamento_api.exception.EntityNotFoundException;
+import com.estacionamento_api.exception.PasswordInvalidException;
 import com.estacionamento_api.exception.UserNameUniqueViolationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
+
+    @ExceptionHandler(PasswordInvalidException.class)
+    public ResponseEntity<ErroMessage> PasswordInvalidException(RuntimeException ex,HttpServletRequest request){
+        log.error("Api Error - ",ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErroMessage(request,HttpStatus.BAD_REQUEST,ex.getMessage()));
+
+
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErroMessage> entityNotFoundException(RuntimeException ex,HttpServletRequest request){
