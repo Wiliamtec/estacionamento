@@ -7,6 +7,7 @@ import com.estacionamento_api.web.dto.UsuarioResponseDto;
 import com.estacionamento_api.web.dto.UsuarioSenhaDto;
 import com.estacionamento_api.web.dto.mapper.UsuarioMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -78,6 +79,12 @@ public class UsuarioController {
     }
 
 
+    @Operation(summary = "Listar todos os usuarios",description = "Listar todos os usuarios",
+            responses = {
+                    @ApiResponse(responseCode = "200",description = "Lista todos os usuarios Cadastrados",
+                            content = @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation =UsuarioResponseDto.class ))))
+
+            })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDto>> getAll(){
         List <Usuario> users = usuService.buscarTodos();
