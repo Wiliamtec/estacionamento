@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.List;
+
 
 // ###############ATENÇÂO##################
 //SE ATENTAR DOCUMENTAÇÂO de Migração de Testes de Integração(Spring Boot 3 → Spring Boot 4)
@@ -301,6 +303,21 @@ public class UsuarioIT {
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
 
+
+    }
+
+    @Test
+    public void listarUsuarios_SemQualquerParametro_RetornarListaDeUsuariosComStatus200() {
+            List<UsuarioResponseDto> responseBody = testClient
+                .get()
+                .uri("/api/v1/usuarios")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.size()).isEqualTo(3);
       
     }
 
