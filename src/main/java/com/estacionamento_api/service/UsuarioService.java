@@ -1,6 +1,7 @@
 package com.estacionamento_api.service;
 
 import com.estacionamento_api.entity.Usuario;
+import com.estacionamento_api.exception.EntityNotFoundException;
 import com.estacionamento_api.exception.UserNameUniqueViolationException;
 import com.estacionamento_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,13 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuRepo.findById(id).orElseThrow(
-                ()-> new RuntimeException("Usuario Não Encontrado"));
+                ()-> new EntityNotFoundException(String.format("Usuario id = %s não encontrado",id)));
     }
 
     @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         if(!novaSenha.equals(confirmaSenha)){
-            throw new RuntimeException("nova senha não confere com confirmação de senha");
+            throw new RuntimeException("Nova senha não confere com a confirmação de senha");
 
         }
 

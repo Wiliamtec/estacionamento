@@ -20,7 +20,7 @@ public class ErroMessage {
     private String statusText;
     private String message;
 
-    //Anotação que diz que apenas objetos não nulos devem estar no objeto de resposta , se estiver nulo ele não enviara na resposta 
+    //Anotação que diz que apenas objetos não nulos devem estar no objeto de resposta , se estiver nulo ele não enviara na resposta
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String ,String> errors;
 
