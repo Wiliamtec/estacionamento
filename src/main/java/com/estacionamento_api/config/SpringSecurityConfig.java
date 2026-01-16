@@ -23,21 +23,18 @@ public class SpringSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http){
         return http
-                .csrf(csrf ->csrf.disable())
-                .formLogin(form ->form.disable())
-                .httpBasic(basic ->basic.disable())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST,"api/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.POST,"api/v1/auth").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios").permitAll() //Se Atentar na barra "/" inicial
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
                         .anyRequest().authenticated()
                 ).sessionManagement(
-                        sesseion ->sesseion.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .addFilterBefore(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
-                )
-                .build();
-
+                ).build();
     }
 
     @Bean
