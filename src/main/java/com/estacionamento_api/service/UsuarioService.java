@@ -6,6 +6,7 @@ import com.estacionamento_api.exception.PasswordInvalidException;
 import com.estacionamento_api.exception.UserNameUniqueViolationException;
 import com.estacionamento_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,13 @@ public class UsuarioService {
 
     //atenção verificar se o plugin do lombok esta instalado na ide , caso contrario dara erro de syntax ao usar final na variavel
     private final  UsuarioRepository usuRepo;
+    private final PasswordEncoder encoder;
 
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
         try {
+            usuario.setPassword(encoder.encode(usuario.getPassword()));
             return usuRepo.save(usuario);
         }catch (org.springframework.dao.DataIntegrityViolationException ex){
             throw new UserNameUniqueViolationException(String.format("Username {%s} ja cadastrado",usuario.getUsername()));
@@ -44,10 +47,10 @@ public class UsuarioService {
 
         Usuario user = buscarPorId(id); //utilizando metodo customizado criado para busca por id
 
-        if(!user.getPassword().equals(senhaAtual)){
+        if(!encoder.matches(senhaAtual,user.getPassword())){
             throw new PasswordInvalidException("sua senha não confere");
         }
-        user.setPassword(novaSenha);
+        user.setPassword(encoder.encode(novaSenha));
         return user;
     }
     @Transactional(readOnly = true)

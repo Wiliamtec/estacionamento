@@ -18,12 +18,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@RequiredArgsConstructor
+
 @Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-
-    private final JwtUserDetailsService detailsService;
+    @Autowired
+    private  JwtUserDetailsService detailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
