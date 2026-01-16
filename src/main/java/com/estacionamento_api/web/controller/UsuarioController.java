@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,13 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Recuperar um usuario pelo Id",description = "Recuperar um usuario pelo Id",
+    @Operation(summary = "Recuperar um usuario pelo Id",description = "Requisição exige um Token Valido , Acesso Restrito a ADMIN|CLIENTE",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Recurso recuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =UsuarioResponseDto.class ))),
+                    @ApiResponse(responseCode = "403",description = "Usuario Sem Permissão para acessar esse recurso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
                     @ApiResponse(responseCode = "404",description = "Recurso não Encontrado",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class )))
             })
@@ -63,13 +67,16 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Atualizar senha ",description = "Atualizar senha",
+    @Operation(summary = "Atualizar senha ",description = "Requisição exige um Token Valido , Acesso Restrito a ADMIN|CLIENTE",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "Senha Atualizada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =Void.class ))),
                     @ApiResponse(responseCode = "404",description = "Senha não confere",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
                     @ApiResponse(responseCode = "400",description = "Recurso não Encontrado",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
+                    @ApiResponse(responseCode = "403",description = "Usuario Sem Permissão para acessar esse recurso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
                     @ApiResponse(responseCode = "422",description = "Campos invalidos ou mal formatados",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class )))
@@ -84,10 +91,13 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Listar todos os usuarios",description = "Listar todos os usuarios",
+    @Operation(summary = "Listar todos os usuarios cadastrados",description = "Requisição exige um Token Valido , Acesso Restrito a ADMIN|CLIENTE",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Lista todos os usuarios Cadastrados",
-                            content = @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation =UsuarioResponseDto.class ))))
+                            content = @Content(mediaType = "application/json",array = @ArraySchema(schema = @Schema(implementation =UsuarioResponseDto.class )))),
+                    @ApiResponse(responseCode = "403",description = "Usuario Sem Permissão para acessar esse recurso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
 
             })
     @GetMapping
