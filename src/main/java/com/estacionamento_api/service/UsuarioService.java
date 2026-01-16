@@ -54,4 +54,15 @@ public class UsuarioService {
     public List<Usuario> buscarTodos() {
         return usuRepo.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public Usuario buscarPorUsername(String username) {
+        return usuRepo.findByUsername(username).orElseThrow(
+                ()-> new EntityNotFoundException(String.format("Usuario id com username: {%s} não encontrado",username)));
+    };
+    @Transactional(readOnly = true)
+    public Usuario.Role buscarRolePorUsername(String username) {
+        return usuRepo.findRoleByUserName(username);
+    }
 }
+
