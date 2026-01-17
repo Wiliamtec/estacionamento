@@ -70,11 +70,8 @@ public class UsuarioController {
     @Operation(summary = "Atualizar senha ",description = "Requisição exige um Token Valido , Acesso Restrito a ADMIN|CLIENTE",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "204",description = "Senha Atualizada com sucesso",
-                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =Void.class ))),
-                    @ApiResponse(responseCode = "404",description = "Senha não confere",
-                            content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
-                    @ApiResponse(responseCode = "400",description = "Recurso não Encontrado",
+                    @ApiResponse(responseCode = "204",description = "Senha Atualizada com sucesso"),
+                    @ApiResponse(responseCode = "400",description = "Senha não confere",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
                     @ApiResponse(responseCode = "403",description = "Usuario Sem Permissão para acessar esse recurso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation =ErrorMessage.class ))),
@@ -85,7 +82,7 @@ public class UsuarioController {
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE') AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> updatePassword(@PathVariable Long id,@Valid @RequestBody UsuarioSenhaDto dto){
-        Usuario user = usuService.editarSenha(id, dto.getSenhaAtual(),dto.getNovaSenha(),dto.getConfirmaSenha());
+        usuService.editarSenha(id, dto.getSenhaAtual(),dto.getNovaSenha(),dto.getConfirmaSenha());
         return  ResponseEntity.noContent().build();
 
     }
