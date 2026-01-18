@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ClienteCraeteDto {
+public class ClienteCreateDto {
     @NotBlank
     @Size(min = 5,max = 100)
     private String nome;
