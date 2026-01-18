@@ -1,5 +1,6 @@
 package com.estacionamento_api.web.exception;
 
+import com.estacionamento_api.exception.CpfUniqueViolationException;
 import com.estacionamento_api.exception.EntityNotFoundException;
 import com.estacionamento_api.exception.PasswordInvalidException;
 import com.estacionamento_api.exception.UserNameUniqueViolationException;
@@ -55,7 +56,7 @@ public class ApiExceptionHandler {
     }
 
 
-    @ExceptionHandler(UserNameUniqueViolationException.class)
+    @ExceptionHandler({UserNameUniqueViolationException.class, CpfUniqueViolationException.class})
     public ResponseEntity<ErroMessage> UniqueViolationExceptionException(RuntimeException ex,HttpServletRequest request){
         log.error("Api Error - ",ex);
         return ResponseEntity
