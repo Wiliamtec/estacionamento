@@ -1,5 +1,6 @@
 package com.estacionamento_api.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
@@ -9,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @Getter
 @Setter
 public class ClienteCraeteDto {
-    @NonNull
+    @NotBlank
     @Size(min = 5,max = 100)
     private String nome;
 
