@@ -131,4 +131,22 @@ public class ClienteIT {
 
     }
 
+    @Test
+    public void buscarCliente_ComIdExistentePeloAdmin_RetornarClienteStatus200(){
+        ClienteResponseDto responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/10")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClienteResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+        
+
+
+    }
+
 }
