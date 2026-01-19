@@ -5,5 +5,5 @@ insert into USUARIOS(id, username, password, role)values(103, 'pedro@gmail.com',
 
 
 
-insert into CLIENTES(id, nome, cpf, id_usuario)values(10, 'Bianca Silva', '28293518006', 101);
-insert into CLIENTES(id, nome, cpf, id_usuario)values(20, 'Peter Tosh', '41644459043', 102);
+insert into CLIENTES(id, nome, cpf, id_usuario)values(10,'Bianca Silva', '28293518006',101);
+insert into CLIENTES(id, nome, cpf, id_usuario)values(20,'Peter Tosh', '41644459043',102);
