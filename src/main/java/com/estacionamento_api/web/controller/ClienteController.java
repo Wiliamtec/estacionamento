@@ -2,11 +2,14 @@ package com.estacionamento_api.web.controller;
 
 import com.estacionamento_api.entity.Cliente;
 import com.estacionamento_api.jwt.JwtUserDetails;
+import com.estacionamento_api.repository.projection.ClienteProjection;
 import com.estacionamento_api.service.ClienteService;
 import com.estacionamento_api.service.UsuarioService;
 import com.estacionamento_api.web.dto.ClienteCreateDto;
 import com.estacionamento_api.web.dto.ClienteResponseDto;
+import com.estacionamento_api.web.dto.PageableDto;
 import com.estacionamento_api.web.dto.mapper.ClienteMapper;
+import com.estacionamento_api.web.dto.mapper.PageableMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -80,9 +83,9 @@ public class ClienteController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<Cliente>> getAll(Pageable pegeable){
-        Page<Cliente> clientes = clienteService.buscarTodos(pegeable);
-        return ResponseEntity.ok((clientes));
+    public ResponseEntity<PageableDto> getAll(Pageable pegeable){
+        Page<ClienteProjection> clientes = clienteService.buscarTodos(pegeable);
+        return ResponseEntity.ok(PageableMapper.toDto(clientes));
 
     }
 }

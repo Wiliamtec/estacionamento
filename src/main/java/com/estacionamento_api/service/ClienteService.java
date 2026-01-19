@@ -4,6 +4,7 @@ import com.estacionamento_api.entity.Cliente;
 import com.estacionamento_api.exception.CpfUniqueViolationException;
 import com.estacionamento_api.exception.EntityNotFoundException;
 import com.estacionamento_api.repository.ClienteRepository;
+import com.estacionamento_api.repository.projection.ClienteProjection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Cliente> buscarTodos(Pageable pegeable) {
-        return clienteRepository.findAll(pegeable);
+    public Page<ClienteProjection> buscarTodos(Pageable pegeable) {
+        return clienteRepository.findAllPageable(pegeable);
     }
 }
