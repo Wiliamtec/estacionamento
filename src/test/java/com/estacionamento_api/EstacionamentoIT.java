@@ -183,6 +183,8 @@ public class EstacionamentoIT {
                 .jsonPath("method").isEqualTo("GET");
     }
 
+
+
     @Test
     public void criarCheckOut_ComReciboExistente_RetornarSucesso() {
 
@@ -204,6 +206,7 @@ public class EstacionamentoIT {
                 .jsonPath("valor").exists()
                 .jsonPath("desconto").exists();
     }
+
 
     @Test
     public void criarCheckOut_ComReciboInexistente_RetornarErrorStatus404() {
