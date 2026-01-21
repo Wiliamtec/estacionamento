@@ -37,4 +37,9 @@ public class ClienteVagaService {
     public Page<ClienteVagaProjection> buscarTodosPorClienteCpf(String cpf, Pageable pageable) {
         return vagaRepository.findAllByClienteCpf(cpf,pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Page<ClienteVagaProjection> buscarTodosPorUsuarioId(Long id, Pageable pageable) {
+        return vagaRepository.findAllByClienteUsuarioIdid(id,pageable);
+    }
 }
