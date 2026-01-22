@@ -89,6 +89,21 @@ public class EstacionamentoController {
 
     }
 
+    @Operation(summary = "Localizar um veículo estacionado", description = "Recurso para retornar um veículo estacionado " +
+            "pelo nº do recibo. Requisição exige uso de um bearer token.",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = PATH, name = "recibo", description = "Número do rebibo gerado pelo check-in")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Número do recibo não encontrado.",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErroMessage.class)))
+            })
+
     @GetMapping("/check-in/{recibo}")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<EstacionamentoResponseDto> getByRecibo(@PathVariable String recibo){
@@ -98,14 +113,34 @@ public class EstacionamentoController {
 
     }
 
+    @Operation(summary = "Operação de check-out", description = "Recurso para dar saída de um veículo do estacionamento. " +
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = { @Parameter(in = PATH, name = "recibo", description = "Número do rebibo gerado pelo check-in",
+                    required = true)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso atualzado com sucesso",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Número do recibo inexistente ou " +
+                            "o veículo já passou pelo check-out.",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErroMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Recurso não permito ao perfil de CLIENTE",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErroMessage.class)))
+            })
+
     @PutMapping("/check-out/{recibo}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EstacionamentoResponseDto> checkout(@PathVariable String recibo){
-        ClienteVaga clienteVaga=estacionamentoService.checkOut(recibo);
+    public ResponseEntity<EstacionamentoResponseDto> checkout(@PathVariable String recibo) {
+        ClienteVaga clienteVaga = estacionamentoService.checkOut(recibo);
         EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
         return ResponseEntity.ok(dto);
-
     }
+
+
 
     @Operation(summary = "Localizar os registros de estacionamentos do cliente por CPF", description = "Localizar os " +
             "registros de estacionamentos do cliente por CPF. Requisição exige uso de um bearer token.",
@@ -170,26 +205,42 @@ public class EstacionamentoController {
             })
     @GetMapping
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<PageableDto> getAllEstacionaentoDorCliente(@AuthenticationPrincipal JwtUserDetails user,
-                                                                     @PageableDefault(size = 5,sort = "dataEntrada",
-                                                                         direction = Sort.Direction.ASC) Pageable pageable){
-        Page<ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorUsuarioId(user.getId(),pageable);
+    public ResponseEntity<PageableDto> getAllEstacionamentosDoCliente(@AuthenticationPrincipal JwtUserDetails user,
+                                                                      @Parameter(hidden = true) @PageableDefault(
+                                                                              size = 5, sort = "dataEntrada",
+                                                                              direction = Sort.Direction.ASC) Pageable pageable) {
+
+        Page<ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorUsuarioId(user.getId(), pageable);
         PageableDto dto = PageableMapper.toDto(projection);
         return ResponseEntity.ok(dto);
     }
 
+
+    @Operation(summary = "Relatório em PDF com os estacionamentos do cliente",
+            description = "Recurso para gerar um relatório com os estacionamentos do cliente. " +
+                    "Requisição exige uso de um bearer token.",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Relatório gerado com sucesso",
+                            content = @Content(mediaType = "application/pdf",
+                                    schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Recurso não permito ao perfil de ADMIN",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErroMessage.class)))
+            })
     @GetMapping("/relatorio")
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity<Void> getRelatorio(HttpServletResponse response,@AuthenticationPrincipal JwtUserDetails user) throws IOException {
-        String cpf = clienteService.buscarPorId(user.getId()).getCpf();
-        jasperService.addParams("CPF",cpf);
+    public ResponseEntity<Void> getRelatorio(HttpServletResponse response, @AuthenticationPrincipal JwtUserDetails user) throws IOException {
+        String cpf = clienteService.buscarPorUsuarioId(user.getId()).getCpf();
+        jasperService.addParams("CPF", cpf);
+
         byte[] bytes = jasperService.gerarPdf();
+
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition","inLine; filename="+System.currentTimeMillis()+".pdf");
+        response.setHeader("Content-disposition", "inline; filename=" + System.currentTimeMillis() + ".pdf");
         response.getOutputStream().write(bytes);
 
         return ResponseEntity.ok().build();
     }
-
 
 }

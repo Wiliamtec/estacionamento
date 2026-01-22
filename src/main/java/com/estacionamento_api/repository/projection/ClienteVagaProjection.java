@@ -2,26 +2,34 @@ package com.estacionamento_api.repository.projection;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public interface ClienteVagaProjection {
-     String getplaca();
-     String getmarca();
-     String getmodelo();
-     String getcor();
-     String getclienteCpf();
-     String getrecibo();
+public class ClienteVagaProjection {
+    private String placa;
+    private String marca;
+    private String modelo;
+    private String cor;
+    private  String clienteCpf;
+    private String  recibo;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-     LocalDateTime getdataEntrada();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dataEntrada;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dataSaida;
+    private String vagaCodigo;
+    private BigDecimal valor;
+    private BigDecimal desconto;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-     LocalDateTime getdataSaida();
-     String getvagaCodigo();
-     BigDecimal getvalor();
-     BigDecimal getdesconto();
 
 }

@@ -22,32 +22,31 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class JasperService {
+
     private final ResourceLoader resourceLoader;
     private final DataSource dataSource;
 
-    private Map<String,Object> params=new HashMap<>();
+    private Map<String, Object> params = new HashMap<>();
 
-    private static final String JASPER_DIRETORIO="classpath:reports/";
+    private static final String JASPER_DIRETORIO = "classpath:reports/";
 
-    public void addParams(String key ,Object value){
-        this.params.put("IMAGEM_DIRETORIO",JASPER_DIRETORIO);
-        this.params.put("REPORT_LOCALE",new Locale("pt","BR"));
-        this.params.put(key,value);
-
+    public void addParams(String key, Object value) {
+        this.params.put("IMAGEM_DIRETORIO", JASPER_DIRETORIO);
+        this.params.put("REPORT_LOCALE", new Locale("pt", "BR"));
+        this.params.put(key, value);
     }
 
-    public byte[] gerarPdf(){
+    public byte[] gerarPdf() {
         byte[] bytes = null;
-        try{
-            Resource resource=resourceLoader.getResource(JASPER_DIRETORIO.concat("estacionamento.jasper"));
+        try {
+            Resource resource = resourceLoader.getResource(JASPER_DIRETORIO.concat("estacionamento.jasper"));
             InputStream stream = resource.getInputStream();
-            JasperPrint print = JasperFillManager.fillReport(stream,params, dataSource.getConnection());
+            JasperPrint print = JasperFillManager.fillReport(stream, params, dataSource.getConnection());
             bytes = JasperExportManager.exportReportToPdf(print);
-        }catch (IOException|JRException|SQLException e) {
-            log.error("Jasper Reports ::: ",e.getMessage());
-            throw new RuntimeException();
+        } catch (IOException | JRException | SQLException e) {
+            log.error("Jasper Reports ::: ", e.getCause());
+            throw new RuntimeException(e);
         }
-
         return bytes;
     }
 }
